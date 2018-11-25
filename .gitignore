@@ -1,0 +1,14 @@
+# Expo
+.expo
+__generated__
+
+# Expo Client builds
+/client-builds
+
+# macOS
+.DS_Store
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
