@@ -1,3 +1,4 @@
-export { HomeScreen } from './HomeScreen';
-export { LinkScreen } from './LinkScreen';
-export { SettingsScreen } from './SettingsScreen';
+export * from './HomeScreen';
+export LinksScreen from './LinksScreen';
+export SettingsScreen from './SettingsScreen';
+export CreateScreen from './CreateScreen';
