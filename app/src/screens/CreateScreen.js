@@ -14,8 +14,8 @@ export default class HomeScreen extends Component {
 		super(props);
 		this.state = {
 			loading: true,
-			name: 'Name',
-			description: `Description`,
+			name: '',
+			description: '',
 			image: null,
 		};
 	};
@@ -59,13 +59,17 @@ export default class HomeScreen extends Component {
 			<View style={styles.container}>
 				<Header/>
 				<View style={styles.formContainer}>
-					<Text style={styles.title}>Lets add a new item</Text>
+					<Text style={styles.title}>
+						Lets add a <Text style={{fontWeight: 'bold', fontSize: 30}} >new item</Text>					
+					</Text>
 					<Form ref="form">
 						<View style={styles.text_div}>
+							<Text>Name</Text>
 							<TextInput style={styles.text_input} type="TextInput" name="nameInput" value={this.state.name} 
 							onChangeText={(name) => this.setState({name})} />
 						</View>
 						<View style={styles.text_div}>
+							<Text>Description</Text>
 							<TextInput style={styles.text_input} type="TextInput" name="descriptionInput" value={this.state.description} 
 							onChangeText={(description) => this.setState({description})} multiline = {true} numberOfLines = {4} maxLength = {240} />
 						</View>
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 30,
 		alignItems: 'center',
-		paddingBottom: 20,
+		paddingBottom: 50,
 	},	
 	text_input: {
 		paddingLeft: 10,
