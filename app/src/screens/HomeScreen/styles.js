@@ -11,6 +11,12 @@ export default {
         flex: 1,
         backgroundColor: '#fff',
     },
+    buttonsContainer: {
+        display: 'inline-block',
+    },
+    buttons: {
+        borderRadius: '50%',
+    },
     developmentModeText: {
         marginBottom: 20,
         color: 'rgba(0,0,0,0.4)',

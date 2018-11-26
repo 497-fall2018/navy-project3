@@ -19,6 +19,8 @@ import styles from './styles';
 const {
     comment,
     container,
+    buttons,
+    buttonsContainer,
     developmentModeText,
     contentContainer,
     welcomeContainer,
@@ -73,11 +75,10 @@ class HomeScreenComponent extends Component {
             <Container
             >
                 <View style={container}>
-                    <Container>
-                        <Button danger><Text> X </Text></Button>
-                        <Button success><Text> SKIP </Text></Button>
-                        <Button primary><Text> O </Text></Button>
-                        <CommentsList/>
+                    <Container style={buttonsContainer}>
+                        <Button danger large style={buttons}><Text> X </Text></Button>
+                        <Button success large style={buttons}><Text> SKIP </Text></Button>
+                        <Button primary large style={buttons}><Text> O </Text></Button>
                     </Container>
                     <GestureRecognizer
                         onSwipeUp={(state) => this.onSwipeUp(state)}
