@@ -12,3 +12,6 @@ __generated__
 node_modules
 npm-debug.log
 yarn-error.log
+
+# Editor Folders
+.vscode/

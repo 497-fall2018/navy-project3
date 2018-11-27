@@ -1,18 +1,45 @@
-import React from 'react';
-import { Image, Platform, ScrollView, StyleSheet, TouchableOpacity, View, } from 'react-native';
-import { WebBrowser } from 'expo';
+import React, {Component} from 'react';
+import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid,  } from 'react-native';
+import { WebBrowser, Icon, ImagePicker, Permissions } from 'expo';
 import { Container, Header, Content, Button, Text } from 'native-base';
 
-import { MonoText } from '../components/StyledText';
+import Form from 'react-native-form'
 
-export default class HomeScreen extends React.Component {
+
+export default class HomeScreen extends Component {
 	static navigationOptions = {
 		header: null,
 	};
 	constructor(props) {
 		super(props);
-		this.state = { loading: true };
-	}
+		this.state = {
+			loading: true,
+			name: '',
+			description: '',
+			image: null,
+		};
+	};
+
+	_pickImage = async () => {
+		async function getCameraAsync() {
+			const { status } = await Permissions.askAsync(Permissions.CAMERA);
+			if (status === 'granted') {
+				getCameraRollAsync();
+			} else {
+			  throw new Error('Camera permissions not granted');
+			}
+		}
+		async function getCameraRollAsync() {
+			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+			if (status === 'granted') {
+				let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
+			} else {
+			  throw new Error('Camera permissions not granted');
+			}
+		}
+		getCameraAsync();
+		//let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
+	};
 
 	async componentWillMount() {
 		await Expo.Font.loadAsync({
@@ -23,63 +50,48 @@ export default class HomeScreen extends React.Component {
 		this.setState({ loading: false });
 	}
 	render() {
+		let { image } = this.state;
+
 		if (this.state.loading) {
 			return <Expo.AppLoading />;
 		}
 		return (
 			<View style={styles.container}>
-          <Container>
-            <Header />
-          </Container>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
-
-        </ScrollView>
-      </View>
+				<Header/>
+				<View style={styles.formContainer}>
+					<Text style={styles.title}>
+						Lets add a <Text style={{fontWeight: 'bold', fontSize: 30}} >new item</Text>					
+					</Text>
+					<Form ref="form">
+						<View style={styles.text_div}>
+							<Text>Name</Text>
+							<TextInput style={styles.text_input} type="TextInput" name="nameInput" value={this.state.name} 
+							onChangeText={(name) => this.setState({name})} />
+						</View>
+						<View style={styles.text_div}>
+							<Text>Description</Text>
+							<TextInput style={styles.text_input} type="TextInput" name="descriptionInput" value={this.state.description} 
+							onChangeText={(description) => this.setState({description})} multiline = {true} numberOfLines = {4} maxLength = {240} />
+						</View>
+					</Form>
+					<TouchableHighlight style={styles.camera_button} onPress={this._pickImage} >
+						<View>
+							<Icon.Ionicons
+								name={Platform.OS === 'ios' ? 'ios-camera' : 'md-camera'}
+								size={26}
+								style={{ marginBottom: -3 }}
+							/>
+						</View>
+					</TouchableHighlight>
+				</View>
+				<View style={styles.submitContainer}>
+					<Button style={styles.submit_button}>
+						<Text>Submit</Text>
+					</Button>
+				</View>
+	 		</View>
 		);
 	}
-
-	_maybeRenderDevelopmentModeWarning() {
-		if (__DEV__) {
-			const learnMoreButton = (
-				<Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-			);
-
-			return (
-				<Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
-        </Text>
-			);
-		} else {
-			return (
-				<Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-			);
-		}
-	}
-
-	_handleLearnMorePress = () => {
-		WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-	};
-
-	_handleHelpPress = () => {
-		WebBrowser.openBrowserAsync(
-			'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-		);
-	};
 }
 
 const styles = StyleSheet.create({
@@ -87,86 +99,39 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: '#fff',
 	},
-	developmentModeText: {
-		marginBottom: 20,
-		color: 'rgba(0,0,0,0.4)',
-		fontSize: 14,
-		lineHeight: 19,
-		textAlign: 'center',
+	formContainer: {
+		flex: 5,
+		padding: 30,
 	},
-	contentContainer: {
-		paddingTop: 30,
-	},
-	welcomeContainer: {
+	title: {
+		fontSize: 30,
 		alignItems: 'center',
-		marginTop: 10,
-		marginBottom: 20,
+		paddingBottom: 50,
+	},	
+	text_input: {
+		paddingLeft: 10,
 	},
-	welcomeImage: {
-		width: 100,
-		height: 80,
-		resizeMode: 'contain',
-		marginTop: 3,
-		marginLeft: -10,
+	text_div: {
+		padding: 10,
+		marginBottom: 10,
+		borderWidth: 1,
+		borderColor: '#DDDDDD',
+		borderRadius: 7
 	},
-	getStartedContainer: {
+	camera_button: {
 		alignItems: 'center',
-		marginHorizontal: 50,
+		backgroundColor: '#DDDDDD',
+		padding: 10,
+		borderRadius: 7
 	},
-	homeScreenFilename: {
-		marginVertical: 7,
-	},
-	codeHighlightText: {
-		color: 'rgba(96,100,109, 0.8)',
-	},
-	codeHighlightContainer: {
-		backgroundColor: 'rgba(0,0,0,0.05)',
-		borderRadius: 3,
-		paddingHorizontal: 4,
-	},
-	getStartedText: {
-		fontSize: 17,
-		color: 'rgba(96,100,109, 1)',
-		lineHeight: 24,
-		textAlign: 'center',
-	},
-	tabBarInfoContainer: {
-		position: 'absolute',
-		bottom: 0,
-		left: 0,
-		right: 0,
-		...Platform.select({
-			ios: {
-				shadowColor: 'black',
-				shadowOffset: { height: -3 },
-				shadowOpacity: 0.1,
-				shadowRadius: 3,
-			},
-			android: {
-				elevation: 20,
-			},
-		}),
-		alignItems: 'center',
-		backgroundColor: '#fbfbfb',
-		paddingVertical: 20,
-	},
-	tabBarInfoText: {
-		fontSize: 17,
-		color: 'rgba(96,100,109, 1)',
-		textAlign: 'center',
-	},
-	navigationFilename: {
-		marginTop: 5,
-	},
-	helpContainer: {
-		marginTop: 15,
+	submitContainer: {
+		flex: 1,
+		padding: 30,
 		alignItems: 'center',
 	},
-	helpLink: {
-		paddingVertical: 15,
-	},
-	helpLinkText: {
-		fontSize: 14,
-		color: '#2e78b7',
+	submit_button: {
+		borderRadius: 7,
+		paddingLeft: 20,
+		paddingRight: 20,
 	},
 });
