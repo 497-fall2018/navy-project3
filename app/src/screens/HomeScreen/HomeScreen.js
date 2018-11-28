@@ -76,9 +76,9 @@ class HomeScreenComponent extends Component {
             >
                 <View style={container}>
                     <Container style={buttonsContainer}>
-                        <Button danger large style={buttons}><Text> X </Text></Button>
-                        <Button success large style={buttons}><Text> SKIP </Text></Button>
-                        <Button primary large style={buttons}><Text> O </Text></Button>
+                        <Button danger large rounded><Text> X </Text></Button>
+                        <Button success large rounded><Text> SKIP </Text></Button>
+                        <Button primary large rounded><Text> O </Text></Button>
                     </Container>
                     <GestureRecognizer
                         onSwipeUp={(state) => this.onSwipeUp(state)}

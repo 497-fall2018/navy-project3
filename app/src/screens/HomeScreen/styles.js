@@ -12,10 +12,6 @@ export default {
         backgroundColor: '#fff',
     },
     buttonsContainer: {
-        display: 'inline-block',
-    },
-    buttons: {
-        borderRadius: '50%',
     },
     developmentModeText: {
         marginBottom: 20,
