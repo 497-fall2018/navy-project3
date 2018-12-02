@@ -5,8 +5,8 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import Root from './Root';
-import * as reducers from './ducks';
+import Root from './src/Root';
+import * as reducers from './src/ducks';
 
 const rootReducer = combineReducers(reducers);
 const store = createStore(rootReducer, {}, applyMiddleware(ReduxThunk));
@@ -40,15 +40,15 @@ export default class App extends React.Component {
 	_loadResourcesAsync = async() => {
 		return Promise.all([
 			Asset.loadAsync([
-				require('./assets/images/robot-dev.png'),
-				require('./assets/images/robot-prod.png'),
+				require('./src/assets/images/robot-dev.png'),
+				require('./src/assets/images/robot-prod.png'),
 			]),
 			Font.loadAsync({
 				// This is the font that we are using for our tab bar
 				...Icon.Ionicons.font,
 				// We include SpaceMono because we use it in HomeScreen.js. Feel free
 				// to remove this if you are not using it in your app
-				'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+				'space-mono': require('./src/assets/fonts/SpaceMono-Regular.ttf'),
 			}),
 		]);
 	};
