@@ -44,7 +44,7 @@ import {
     handle_swipe_up,
     loaded_fonts,
 } from '../../ducks/post'
-import {ItemDisplayComponent} from '../../components/';
+
 
 class HomeScreenComponent extends Component {
     static navigationOptions = {
@@ -77,7 +77,7 @@ class HomeScreenComponent extends Component {
             <Container
             >
                 <View style={container}>
-                    <ItemDisplayComponent></ItemDisplayComponent>
+                    <ItemDisplay/>
                     <GestureRecognizer
                         onSwipeUp={(state) => this.onSwipeUp(state)}
                         onSwipeDown={(state) => this.onSwipeDown(state)}
