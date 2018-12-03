@@ -14,6 +14,7 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 import {
   CommentsList,
+  ItemDisplay
 } from '../../components';
 import styles from './styles';
 const {
@@ -43,6 +44,7 @@ import {
     handle_swipe_up,
     loaded_fonts,
 } from '../../ducks/post'
+import {ItemDisplayComponent} from '../../components/';
 
 class HomeScreenComponent extends Component {
     static navigationOptions = {
@@ -75,11 +77,7 @@ class HomeScreenComponent extends Component {
             <Container
             >
                 <View style={container}>
-                    <Container style={buttonsContainer}>
-                        <Button danger large rounded><Text> X </Text></Button>
-                        <Button success large rounded><Text> SKIP </Text></Button>
-                        <Button primary large rounded><Text> O </Text></Button>
-                    </Container>
+                    <ItemDisplayComponent></ItemDisplayComponent>
                     <GestureRecognizer
                         onSwipeUp={(state) => this.onSwipeUp(state)}
                         onSwipeDown={(state) => this.onSwipeDown(state)}
