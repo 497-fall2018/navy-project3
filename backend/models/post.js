@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const user = require('./user');
+const comment = require('./comment');
 
 const postSchema = new Schema({
 	image: {
@@ -9,6 +10,7 @@ const postSchema = new Schema({
 	},
     title: String,
     description: String,
+    comments: [comment]
     author: user,
 });
 
