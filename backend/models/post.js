@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const user = require('./user');
-const comment = require('./comment');
+
+const commentSchema = new Schema({
+	//author: user,
+    text: String,
+});
 
 const postSchema = new Schema({
 	image: {
@@ -10,8 +14,8 @@ const postSchema = new Schema({
 	},
     title: String,
     description: String,
-    comments: [comment]
-    author: user,
+    comments: [commentSchema],
+    //author: user,
 });
 
 const post = mongoose.model('post', postSchema);
