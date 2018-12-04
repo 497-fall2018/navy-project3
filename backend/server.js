@@ -17,6 +17,10 @@ mongoose.connect('mongodb://mmoderwell.com:27018/buyornah').then(() => console.l
 	.catch((e) => {
 		console.error('Connection to mongodb failed.');
 	});
+// mongoose.connect('mongodb://localhost:27017/buyornah').then(() => console.log('Connected to buyornah database.'))
+// 	.catch((e) => {
+// 		console.error('Connection to mongodb failed.');
+// 	});
 
 //the database connection is disconnected
 mongoose.connection.on('disconnected', function () {
