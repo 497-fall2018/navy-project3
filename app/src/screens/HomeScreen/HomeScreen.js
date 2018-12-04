@@ -82,9 +82,6 @@ class HomeScreenComponent extends Component {
                         onSwipeUp={(state) => this.onSwipeUp(state)}
                         onSwipeDown={(state) => this.onSwipeDown(state)}
                         config={config}
-                        style={{
-                          flex: 1,
-                        }}
                     >
                         <View style={swipeUpCommentContainer}>
                             <Text style={swipeUpCommentText}> swipe up to comment </Text>
