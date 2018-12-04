@@ -7,11 +7,13 @@ export const HANDLE_SWIPE_DOWN = 'buyornah/post/HANDLE_SWIPE_DOWN';
 export const HANDLE_SWIPE_UP = 'buyornah/post/HANDLE_SWIPE_UP';
 export const HANDLE_SWIPE_LEFT = 'buyornah/post/HANDLE_SWIPE_LEFT';
 export const HANDLE_SWIPE_RIGHT = 'buyornah/post/HANDLE_SWIPE_RIGHT';
+export const TOGGLE_FULL_TEXT = 'buyornah/post/TOGGLE_FULL_TEXT';
 
 
 const INITIAL_STATE = {
     loading: true,
     showComments: false,
+    showFullText: false
 };
 
 
@@ -40,6 +42,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         case HANDLE_SWIPE_LEFT:
             return {
                 ...state
+            }
+        case TOGGLE_FULL_TEXT:
+            return {
+                ...state,
+                showFullText: !state.showFullText
             }
         default:
             return state;
@@ -81,6 +88,13 @@ export const handle_swipe_right = () => {
     return (dispatch) => {
         dispatch({
             type: HANDLE_SWIPE_RIGHT
+        })
+    }
+}
+export const toggle_full_text = () => {
+    return (dispatch) => {
+        dispatch({
+            type: TOGGLE_FULL_TEXT
         })
     }
 }
