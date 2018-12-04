@@ -12,26 +12,51 @@ module.exports = (app) => {
 			res.send({ hello: "world" });
 		});
 	});
+	//make a new post
+	app.post('/api/post/:username', (req, res) => {
+		const { username } = req.params;
+		const data = req.body;
+		const post = new Post({ image: data.image, title: data.title, description: data.description, comments: []  });
+		post.save().then(() => {
+			res.send({ success: true, error: false });
+		});
+	});
+	//add a comment to a post
+	app.post('/api/post/:post_id/:username', (req, res) => {
+		const { post_id, username } = req.params;
+		const data = req.body;
+
+		Post.findById(post_id, (error, post) => {
+			if (error) return res.json({ success: false, error });
+			post.comments.push({ text: data.text});
+			post.save(error => {
+				if (error) return res.json({ success: false, error: error });
+				return res.json({ success: true });
+			});
+		});
+	});
+	//get list of all posts
+	app.get('/api/post/', (req, res) => {
+		Post.find((err, posts) => {
+			if (err) return res.json({ success: false, error: err });
+			return res.json({ success: true, data: posts });
+		});
+	});
+
 
 	//user access routes
 	app.get('/signup', (req, res) => {
-		res.render('../views/signup.ejs');
+		
 	});
 	app.get('/login', (req, res) => {
-		res.render('../views/login.ejs');
+		
 	});
 	app.get('/logout', (req, res) => {
-		req.logout();
-		req.session.destroy(() => {
-			res.clearCookie('connect.sid');
-			res.redirect('/login');
-		})
+		
 	});
-	app.post('/login', passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/' }),
-		(req, res) => {
-			//res.redirect('/');
-			res.send({error: false});
-		});
+	app.post('/login', passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/' }), () => {
+
+	});
 	app.post('/signup/', (req, res) => {
 		const body = req.body;
 		const { username, password } = body;
@@ -52,18 +77,13 @@ module.exports = (app) => {
 									.then((user) => {
 										const id = user._id.toString();
 										console.log('Created new user: ' + id);
-										req.login(id, (err) => {
-											if (err) { console.log(err) }
-											//res.setHeader('Content-Type', 'text/html');
-											//res.redirect('/');
 											res.setHeader('Content-Type', 'application/json');
 											res.send({error: false});
-										});
 									});
 							});
 					});
-				}
-			});
+				};
+			}
+		);
 	});
-
 }
