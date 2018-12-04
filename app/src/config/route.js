@@ -2,104 +2,98 @@ import React from 'react';
 import { Dimensions, Image, Platform } from 'react-native';
 import { TabNavigator, StackNavigator, TabBarBottom, NavigationActions } from 'react-navigation';
 import styles from './styles';
-import {
-  HomeScreen,
-  CreateScreen,
-  LinksScreen,
-  SettingsScreen
-} from '../screens';
+import { HomeScreen, CreateScreen, SettingsScreen } from '../screens';
 import TabBarIcon from '../components/TabBarIcon';
 
 const {
-  tabBarIconStyle,
-  heartIconStyle,
+    tabBarIconStyle,
+    heartIconStyle,
 } = styles;
 
 const navigateOnce = (getStateForAction) => (action, state) => {
     const { type, routeName } = action;
     return (
-      state &&
-      type === NavigationActions.NAVIGATE &&
-      routeName === state.routes[state.routes.length - 1].routeName
+        state &&
+        type === NavigationActions.NAVIGATE &&
+        routeName === state.routes[state.routes.length - 1].routeName
     ) ? state : getStateForAction(action, state);
 };
 
 const MainTabRouteConfig = {
     HomeScreen: {
-      screen: HomeScreen,
-      navigationOptions: {
-        tabBarLabel: 'HomeScreen',
-        // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-        tabBarIcon: ({ focused }) => (
-    		<TabBarIcon
-          focused={focused}
-          name={
+        screen: HomeScreen,
+        navigationOptions: {
+            tabBarLabel: 'HomeScreen',
+            // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+            tabBarIcon: ({ focused }) => (
+          	<TabBarIcon
+          	focused={focused}
+          	name={
             Platform.OS === 'ios'
               ? `ios-information-circle${focused ? '' : '-outline'}`
               : 'md-information-circle'
-          }
-        />
-    	),
-      }
+          	}
+        	/>
+            ),
+        }
     },
-    LinksScreen: {
-      screen: LinksScreen,
-      navigationOptions: {
-        tabBarLabel: 'LinksScreen',
-        // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-        tabBarIcon: ({ focused }) => (
-    		<TabBarIcon
+    CreateScreen: {
+        screen: CreateScreen,
+        navigationOptions: {
+            tabBarLabel: 'CreateScreen',
+            // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+            tabBarIcon: ({ focused }) => (
+                <TabBarIcon
           focused={focused}
-          name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+          name={Platform.OS === 'ios' ? 'ios-add' : 'md-add'}
         />
-    	),
-      }
+            ),
+        }
     },
     SettingsScreen: {
-      screen: SettingsScreen,
-      navigationOptions: {
-        tabBarLabel: 'SettingsScreen',
-        // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-        tabBarIcon: ({ focused }) => (
-    		<TabBarIcon
+        screen: SettingsScreen,
+        navigationOptions: {
+            tabBarLabel: 'SettingsScreen',
+            // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+            tabBarIcon: ({ focused }) => (
+                <TabBarIcon
           focused={focused}
           name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
         />
-    	),
-      }
+            ),
+        }
     },
-  };
+};
 
-  const TabNavigatorConfigs = {
+const TabNavigatorConfigs = {
     swipeEnabled: false,
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     tabBarOptions: {
-      //This is where you set the highlight color for the bottom tab navigation
-      activeTintColor: 'black'
+        //This is where you set the highlight color for the bottom tab navigation
+        activeTintColor: 'black'
     },
     lazy: true
-  };
+};
 
-  const MainTabNavigator = TabNavigator(MainTabRouteConfig, TabNavigatorConfigs);
+const MainTabNavigator = TabNavigator(MainTabRouteConfig, TabNavigatorConfigs);
 
-  const AppRouteConfigs = {
+const AppRouteConfigs = {
     MainTabs: {
-      screen: MainTabNavigator
+        screen: MainTabNavigator
     },
     CreateScreen: {
-      screen: CreateScreen
+        screen: CreateScreen
     },
 
-  };
+};
 
-  const AppNavigator = StackNavigator(
-    AppRouteConfigs,
-    {
-      headerMode: 'screen'
+const AppNavigator = StackNavigator(
+    AppRouteConfigs, {
+        headerMode: 'screen'
     }
-  );
+);
 
-  AppNavigator.router.getStateForAction = navigateOnce(AppNavigator.router.getStateForAction);
+AppNavigator.router.getStateForAction = navigateOnce(AppNavigator.router.getStateForAction);
 
-  export { AppNavigator };
+export { AppNavigator };
