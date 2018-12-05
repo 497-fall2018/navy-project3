@@ -16,7 +16,7 @@ module.exports = (app) => {
 		});
 	});
 	// make a new post
-	app.post('/api/post/:username', (req, res) => {
+	app.post('/api/post', (req, res) => {
 		let form = new formidable.IncomingForm()
 		form.keepExtensions = true
 		form.parse(req, (err, fields, files) => {
@@ -38,8 +38,8 @@ module.exports = (app) => {
 	});
 
 	// add a comment to a post
-	app.post('/api/post/:post_id/:username', (req, res) => {
-		const { post_id, username } = req.params;
+	app.post('/api/post/:post_id', (req, res) => {
+		const { post_id } = req.params;
 		const data = req.body;
 
 		Post.findById(post_id, (error, post) => {
@@ -59,7 +59,7 @@ module.exports = (app) => {
 			return res.json({ success: true, data: posts });
 		});
 	});
-	
+
 	// delete a post
 	app.delete('/api/post/:post_id', (req, res) => {
 		const { post_id } = req.params;
@@ -69,6 +69,25 @@ module.exports = (app) => {
 		Post.remove({ _id: post_id }, (error, post) => {
 			if (error) return res.json({ success: false, error });
 			return res.json({ success: true });
+		});
+	});
+	// delete a comment
+	app.delete('/api/post/:post_id/:comment_id', (req, res) => {
+		const post_id = req.params.post_id;
+		const comment_id = req.params.comment_id;
+		if (!post_id) {
+			return res.json({ success: false, error: 'No post id provided' });
+		}
+		if (!comment_id) {
+			return res.json({ success: false, error: 'No comment id provided' });
+		}
+		Post.findById( req.params.post_id , (error, post) => {
+			if (error) return res.json({ success: false, error });
+			post["comments"].remove({_id: comment_id});
+			post.save(error => {
+				if (error) return res.json({ success: false, error });
+				return res.json({ success: true });
+			});
 		});
 	});
 

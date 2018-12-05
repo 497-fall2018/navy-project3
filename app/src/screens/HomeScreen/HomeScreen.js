@@ -44,6 +44,7 @@ import {
     handle_comment_change,
     handle_swipe_down,
     handle_swipe_up,
+    load_posts,
     loaded_fonts,
     submit_new_comment
 } from '../../ducks/post'
@@ -61,6 +62,9 @@ class HomeScreenComponent extends Component {
         });
         this.props.loaded_fonts();
     }
+    componentDidMount() {
+        this.props.load_posts();
+    }
     onSwipeUp(gestureState) {
         this.props.handle_swipe_up();
     }
@@ -71,8 +75,10 @@ class HomeScreenComponent extends Component {
         this.props.handle_comment_change(c);
     }
     submitNewComment = () => {
-        console.log(this.props.curr_post_id)
         this.props.submit_new_comment(this.props.comment, this.props.curr_post_id);
+        setTimeout(() => {
+            this.props.load_posts();
+        }, 1000);
     }
     render() {
         const config = {
@@ -91,6 +97,7 @@ class HomeScreenComponent extends Component {
                         <Button success large rounded><Text> SKIP </Text></Button>
                         <Button primary large rounded><Text> O </Text></Button>
                     </Container>
+                    <Text>{"   post id: " + this.props.posts[0]["_id"]}</Text>
                     <GestureRecognizer
                         onSwipeUp={(state) => this.onSwipeUp(state)}
                         onSwipeDown={(state) => this.onSwipeDown(state)}
@@ -171,12 +178,14 @@ export { HomeScreenComponent };
 
 const mapStateToProps = (state, ownProps) => {
     const { post } = state;
-    const { comment, curr_post_id, loading, showComments } = post;
+    const { comment, comments, curr_post_id, loading, posts, showComments } = post;
     return {
         ...ownProps,
         comment,
+        comments,
         curr_post_id,
         loading,
+        posts,
         showComments,
     };
 };
@@ -185,6 +194,7 @@ export const HomeScreen = connect(mapStateToProps, {
     handle_comment_change,
     handle_swipe_down,
     handle_swipe_up,
+    load_posts,
     loaded_fonts,
     submit_new_comment,
 })(HomeScreenComponent);
