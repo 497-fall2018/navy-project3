@@ -22,7 +22,6 @@ import _ from 'lodash';
 import { Comment } from '../Comment';
 import styles from './styles';
 import {
-    load_posts,
 } from '../../ducks/post'
 
 const {
@@ -30,12 +29,6 @@ const {
 } = styles;
 
 class CommentsListComponent extends Component {
-    componentDidMount() {
-        console.log("didmount")
-    }
-    componentWillMount() {
-        console.log("willmount")
-    }
     render() {
         const commentNodes = (this.props.comments).map(comment => (
             <Comment
@@ -66,5 +59,4 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export const CommentsList = connect(mapStateToProps, {
-    load_posts
 })(CommentsListComponent);
