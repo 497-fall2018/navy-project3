@@ -7,9 +7,11 @@ import {
     StyleSheet,
     TouchableOpacity,
     View,
+    TextInput,
 } from 'react-native';
 import { WebBrowser } from 'expo';
-import { Container, Header, Content, Button, Text } from 'native-base';
+import { Container, Header, Content, Button, Input, InputGroup, Text } from 'native-base';
+import { Icon } from 'react-native-elements';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 import {
@@ -39,9 +41,11 @@ const {
 } = styles;
 import { MonoText } from '../../components/StyledText';
 import {
+    handle_comment_change,
     handle_swipe_down,
     handle_swipe_up,
     loaded_fonts,
+    submit_new_comment
 } from '../../ducks/post'
 
 class HomeScreenComponent extends Component {
@@ -62,6 +66,13 @@ class HomeScreenComponent extends Component {
     }
     onSwipeDown(gestureState) {
         this.props.handle_swipe_down();
+    }
+    handleCommentChange = (c) => {
+        this.props.handle_comment_change(c);
+    }
+    submitNewComment = () => {
+        console.log(this.props.curr_post_id)
+        this.props.submit_new_comment(this.props.comment, this.props.curr_post_id);
     }
     render() {
         const config = {
@@ -89,7 +100,7 @@ class HomeScreenComponent extends Component {
                         }}
                     >
                         <View style={swipeUpCommentContainer}>
-                            <Text style={swipeUpCommentText}> swipe up to comment </Text>
+                            <Text style={swipeUpCommentText}> {this.props.showComments == true ? "swipe down to hide comments":"swipe up to see comments"} </Text>
                         </View>
                     </GestureRecognizer>
     {/*                <View style={tabBarInfoContainer}>
@@ -103,6 +114,19 @@ class HomeScreenComponent extends Component {
 
                 {this.props.showComments &&
                     <ScrollView style={container}>
+                        <Container style={{flexDirection:"row", height: 60}}>
+                            <View style={{width: '80%', marginLeft: 10}}>
+                                <InputGroup borderType="rounded" >
+                                    <Input onChangeText={(text)=>this.handleCommentChange(text)} value={this.props.comment}/>
+                                </InputGroup>
+                            </View>
+                            <View style={{justifyContent: 'center'}}>
+                                <Button onPress={()=>this.submitNewComment()} style={{width: 40, height: 32, justifyContent: 'center'}} >
+                                    <Icon
+                                        name='send' color="white" />
+                                </Button>
+                            </View>
+                        </Container>
                         <CommentsList />
                     </ScrollView>
                     }
@@ -147,16 +171,20 @@ export { HomeScreenComponent };
 
 const mapStateToProps = (state, ownProps) => {
     const { post } = state;
-    const { loading, showComments } = post;
+    const { comment, curr_post_id, loading, showComments } = post;
     return {
         ...ownProps,
+        comment,
+        curr_post_id,
         loading,
         showComments,
     };
 };
 
 export const HomeScreen = connect(mapStateToProps, {
+    handle_comment_change,
     handle_swipe_down,
     handle_swipe_up,
     loaded_fonts,
+    submit_new_comment,
 })(HomeScreenComponent);
