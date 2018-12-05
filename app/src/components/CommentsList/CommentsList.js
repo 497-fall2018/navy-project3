@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Comments from 'react-native-comments';
 import {
     Header,
     Item,
@@ -19,6 +18,8 @@ import { NavigationActions } from 'react-navigation';
 import { View, Text, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+
+import { Comment } from '../Comment';
 import styles from './styles';
 
 
@@ -28,14 +29,15 @@ const {
 
 class CommentsListComponent extends Component {
     render() {
-        const commentNodes = (this.props.data).map(comment => (
+        console.log(this.props.data);
+        const commentNodes = (this.props.comments).map(comment => (
             <Comment
-              body={comment.body}
+              text={comment.text}
               key={comment._id}
               id={comment._id}
-              timestamp={comment.updatedAt}
             >
             </Comment>
+        ));
 
         return (
             <ScrollView>
@@ -49,10 +51,10 @@ export { CommentsListComponent };
 
 const mapStateToProps = (state, ownProps) => {
     const { post } = state;
-    const { data } = post;
+    const { comments } = post;
     return {
         ...ownProps,
-        data
+        comments
     };
 };
 
