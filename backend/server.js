@@ -17,6 +17,10 @@ mongoose.connect('mongodb://mmoderwell.com:27018/buyornah').then(() => console.l
 	.catch((e) => {
 		console.error('Connection to mongodb failed.');
 	});
+// mongoose.connect('mongodb://localhost:27017/buyornah').then(() => console.log('Connected to buyornah database.'))
+// 	.catch((e) => {
+// 		console.error('Connection to mongodb failed.');
+// 	});
 
 //the database connection is disconnected
 mongoose.connection.on('disconnected', function () {
@@ -54,23 +58,23 @@ app.use((req, res, next) => {
 });
 
 //passport local strategy, handles username and password
-passport.use(new LocalStrategy(
-	(username, password, done) => {
-		const User = require('./models/user');
-		const bcrypt = require('bcrypt');
-		User.findOne({ username: username }, function(err, user) {
-			if (err) return done(err);
-			if (!user) return done(null, false);
-			let hashed = user.password;
-			bcrypt.compare(password, hashed, (err, response) => {
-				if (response === true) {
-					return done(null, user);
-				} else {
-					return done(null, false);
-				}
-			});
-		});
-	}));
+// passport.use(new LocalStrategy(
+// 	(username, password, done) => {
+// 		const User = require('./models/user');
+// 		const bcrypt = require('bcrypt');
+// 		User.findOne({ username: username }, function(err, user) {
+// 			if (err) return done(err);
+// 			if (!user) return done(null, false);
+// 			let hashed = user.password;
+// 			bcrypt.compare(password, hashed, (err, response) => {
+// 				if (response === true) {
+// 					return done(null, user);
+// 				} else {
+// 					return done(null, false);
+// 				}
+// 			});
+// 		});
+// 	}));
 
 routes(app);
 
