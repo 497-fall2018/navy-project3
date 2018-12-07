@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid  } from 'react-native';
-import { WebBrowser, Icon, ImagePicker, Permissions } from 'expo';
+import { AppRegistry,ImagePickerIOS,CameraRoll, TouchableOpacity,Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid  } from 'react-native';
+import { WebBrowser, Icon, ImagePicker, Permissions, Camera } from 'expo';
 import { Container, Header, Content, Button, Text } from 'native-base';
 import axios from 'axios';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
@@ -25,11 +25,26 @@ export default class CreateScreen extends Component {
 
 	handleSubmit(data) {
 		console.log(data);
-		axios.post(`http://navy.mmoderwell.com/api/post/`, { 
-            "title": data.name,
-            "description": data.description,
-            "price": data.price
-        })
+		this.setState({name: ''});
+		this.setState({description: ''});
+		this.setState({price: ''});
+		var formData = new FormData();
+		formData.append("title", data.name);
+		formData.append("description", data.description);
+		formData.append("price", data.price);
+		formData.append("image", data.image);
+		const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+		axios.post(`http://navy.mmoderwell.com/api/post/`, formData, config
+		// 	{
+        //     "title": data.name,
+        //     "description": data.description,
+        //     "price": data.price
+        // }
+	)
           .then((response) => {
           	console.log("success");
           	this.props.navigation.navigate('HomeScreen');
@@ -50,6 +65,9 @@ export default class CreateScreen extends Component {
 			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 			if (status === 'granted') {
 				let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
+				// if (!image.cancelled) {
+				// 	this.setState({ image: image})
+				// }
 			} else {
 			  throw new Error('Camera permissions not granted');
 			}
@@ -57,7 +75,74 @@ export default class CreateScreen extends Component {
 		getCameraAsync();
 		//let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
 	};
+	async takePicture(){
+	  console.log('Button Pressed');
+	  if (this.camera){
+	    const options = { quality: 0.2}
+	    var i = 0;
+	    var focus = 0.1;
+	    var image_array = []
+	    var focus_array = []
+	    var urls = [];
+	    for (i = 0; i < 10; i++){
+	      console.log('taking photo')
+	      this.setState({focusDepth: focus});
+	      let photo = await this.camera.takePictureAsync(options);
+	      image_array.push(photo);
+	      focus_array.push(String(focus))
+	      focus += 0.1;
+	      // urls.push(test);
+	    }
 
+	    this.setState({loading: true});
+
+	    folder_name = image_array[0].uri // name folder after first one
+	    folder_name = folder_name.split("/")
+	    folder_name = folder_name[folder_name.length - 1]
+	    folder_name = folder_name.split(".")
+	    folder_name = folder_name[0]
+	    console.log(folder_name);
+
+	    CameraRoll.saveToCameraRoll(image_array[0].uri);
+	    CameraRoll.saveToCameraRoll(image_array[5].uri);
+	    CameraRoll.saveToCameraRoll(image_array[9].uri);
+
+	    this.setState({ imageURI: image_array[0].uri});
+
+	    for (i = 0; i < image_array.length; i++){
+	      let test = await this.uploadImageAsync(image_array[i].uri, focus_array[i], folder_name);
+	      this.setState({progress: i/image_array.length});
+	    }
+
+		this.setState({name: ''});
+		this.setState({description: ''});
+		this.setState({price: ''});
+		var formData = new FormData();
+		formData.append("title", data.name);
+		formData.append("description", data.description);
+		formData.append("price", data.price);
+		formData.append("image", data.imageURI);
+		const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+		axios.post(`http://navy.mmoderwell.com/api/post/`, formData, config
+		// 	{
+        //     "title": data.name,
+        //     "description": data.description,
+        //     "price": data.price
+        // }
+	)
+          .then((response) => {
+          	console.log("success");
+          	this.props.navigation.navigate('HomeScreen');
+          })
+          .catch((error) => {console.log("err");});
+	    this.setState({progress: 0})
+	    this.setState({loading: false});
+	  }
+	}
 	async componentWillMount() {
 		await Expo.Font.loadAsync({
 			Roboto: require("native-base/Fonts/Roboto.ttf"),
@@ -76,34 +161,50 @@ export default class CreateScreen extends Component {
 			<ScrollView style={styles.container}>
 				<View style={styles.formContainer}>
 					<Text style={styles.title}>
-						Lets add a <Text style={{fontWeight: 'bold', fontSize: 30}} >new item</Text>					
+						Let's add a <Text style={{fontWeight: 'bold', fontSize: 30}} >new item</Text>
 					</Text>
-					<Form ref="form">
+					{/*<Form ref="form">
 						<View style={styles.text_div}>
 							<Text>Title</Text>
-							<TextInput style={styles.text_input} type="TextInput" name="nameInput" value={this.state.name} 
+							<TextInput style={styles.text_input} type="TextInput" name="nameInput" value={this.state.name}
 							onChangeText={(name) => this.setState({name})} />
 						</View>
 						<View style={styles.text_div}>
 							<Text>Price</Text>
-							<TextInput style={styles.text_input} type="TextInput" name="priceInput" value={this.state.price} 
+							<TextInput style={styles.text_input} type="TextInput" name="priceInput" value={this.state.price}
 							onChangeText={(price) => this.setState({price})} />
 						</View>
 						<View style={styles.text_div}>
 							<Text>Description</Text>
-							<TextInput style={styles.text_input} type="TextInput" name="descriptionInput" value={this.state.description} 
+							<TextInput style={styles.text_input} type="TextInput" name="descriptionInput" value={this.state.description}
 							onChangeText={(description) => this.setState({description})} multiline = {true} numberOfLines = {4} maxLength = {240} />
 						</View>
-					</Form>
-					<TouchableHighlight style={styles.camera_button} onPress={this._pickImage} >
-						<View>
-							<Icon.Ionicons
-								name={Platform.OS === 'ios' ? 'ios-camera' : 'md-camera'}
-								size={26}
-								style={{ marginBottom: -3 }}
-							/>
-						</View>
-					</TouchableHighlight>
+					</Form>*/
+				}
+					<Camera style={{ flexDirection: 'row',flex: 1 }} type={this.state.type} autoFocus={this.state.autoFocus}
+              focusDepth={this.state.focusDepth} useCamera2Api={true}
+              ref={ref => { this.camera = ref; }}>
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'transparent',
+                    flexDirection: 'row',
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      flex:0.2,
+                      alignSelf: 'flex-end',
+                      alignItems:'center'
+                    }}
+                    onPress={this.takePicture.bind(this)}
+                    >
+                    <Image
+                    style = {{marginBottom: 5, marginLeft: 10, width: 50, height: 50}}
+                    source = {require('../assets/images/robot-dev.png')}
+                    />
+                </TouchableOpacity>
+                </View>
+              </Camera>
 				</View>
 				<View style={styles.submitContainer}>
 					<Button style={styles.submit_button} onPress={() => this.handleSubmit(this.state)}>
@@ -128,7 +229,7 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		alignItems: 'center',
 		paddingBottom: 50,
-	},	
+	},
 	text_input: {
 		paddingLeft: 10,
 	},

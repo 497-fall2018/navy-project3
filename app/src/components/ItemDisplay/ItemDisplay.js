@@ -145,7 +145,7 @@ class ItemDisplayComponent extends Component {
                                             style={{flex:1, width: SCREEN_WIDTH, resizeMode: 'contain'}}
                                             source={{uri: imagetype+";base64,"+base64ArrayBuffer(imagebuffer)}} />
                                     </View>
-                                    <Text>{this.props.posts[this.props.post_index]['title']} &nbsp;(${this.props.posts[this.props.post_index]['price'] && this.props.posts[this.props.post_index]['price']})</Text>
+                                    <Text style={{fontWeight: 'bold'}}>{this.props.posts[this.props.post_index]['title']} &nbsp;(${this.props.posts[this.props.post_index]['price'] && this.props.posts[this.props.post_index]['price']})</Text>
                                     {
                                         this.props.showFullText ?
                                         <Text>{this.props.posts[this.props.post_index]['description']}</Text>
