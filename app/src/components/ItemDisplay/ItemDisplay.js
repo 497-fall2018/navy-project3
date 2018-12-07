@@ -19,8 +19,10 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import {
 	submit_new_vote_buy,
 	submit_new_vote_nah,
-	toggle_full_text
+    toggle_full_text,
+    skip_post
 } from '../../ducks/post';
+
 
 import SCREEN_IMPORT from 'Dimensions'
 
@@ -39,25 +41,93 @@ const styles = ({
 
 class ItemDisplayComponent extends Component {
 	onSwipeLeft(gestureState) {
-		let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
-		let new_nah_vote = post[0]['nah'] + 1;
-		let str = "NAH! \n buy: " + post[0]['buy'].toString() + "\n nah: " + new_nah_vote.toString();
-		Alert.alert(str);
+        let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
+        let new_nah_vote = post[0]['nah'] + 1;
+        let str = "You vote NAH!";
+        let str2 = "Current votes for BUY: " + post[0]['buy'].toString() + "\nCurrent votes for NAH: " + new_nah_vote.toString();
+		Alert.alert(str, str2);
 		this.props.submit_new_vote_nah(new_nah_vote, this.props.curr_post_id);
 	}
 	onSwipeRight(gestureState) {
 		let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
 		let new_buy_vote = post[0]['buy'] + 1;
-		let str = "BUY! \n buy: " + new_buy_vote.toString() + "\n nah: " + post[0]['nah'].toString();
-		Alert.alert(str);
+        let str = "You voted BUY!"
+        let str2= "Current votes for BUY: " + new_buy_vote.toString() + "\nCurrent votes for NAH: " + post[0]['nah'].toString();
+		Alert.alert(str, str2);
 		this.props.submit_new_vote_buy(new_buy_vote, this.props.curr_post_id);
 	}
 	toggleFullText = () => {
 		this.props.toggle_full_text();
-	}
-	render() {
-		return (
-			<Container>
+    }
+    skipPost = () =>{
+        this.props.skip_post();
+    }
+
+        render(){
+
+            function base64ArrayBuffer(arrayBuffer) {
+                var base64    = ''
+                var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+              
+                var bytes         = new Uint8Array(arrayBuffer)
+                var byteLength    = bytes.byteLength
+                var byteRemainder = byteLength % 3
+                var mainLength    = byteLength - byteRemainder
+              
+                var a, b, c, d
+                var chunk
+              
+                // Main loop deals with bytes in chunks of 3
+                for (var i = 0; i < mainLength; i = i + 3) {
+                  // Combine the three bytes into a single integer
+                  chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
+              
+                  // Use bitmasks to extract 6-bit segments from the triplet
+                  a = (chunk & 16515072) >> 18 // 16515072 = (2^6 - 1) << 18
+                  b = (chunk & 258048)   >> 12 // 258048   = (2^6 - 1) << 12
+                  c = (chunk & 4032)     >>  6 // 4032     = (2^6 - 1) << 6
+                  d = chunk & 63               // 63       = 2^6 - 1
+              
+                  // Convert the raw binary segments to the appropriate ASCII encoding
+                  base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d]
+                }
+              
+                // Deal with the remaining bytes and padding
+                if (byteRemainder == 1) {
+                  chunk = bytes[mainLength]
+              
+                  a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2
+              
+                  // Set the 4 least significant bits to zero
+                  b = (chunk & 3)   << 4 // 3   = 2^2 - 1
+              
+                  base64 += encodings[a] + encodings[b] + '=='
+                } else if (byteRemainder == 2) {
+                  chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1]
+              
+                  a = (chunk & 64512) >> 10 // 64512 = (2^6 - 1) << 10
+                  b = (chunk & 1008)  >>  4 // 1008  = (2^6 - 1) << 4
+              
+                  // Set the 2 least significant bits to zero
+                  c = (chunk & 15)    <<  2 // 15    = 2^4 - 1
+              
+                  base64 += encodings[a] + encodings[b] + encodings[c] + '='
+                }
+                
+                return base64
+              }
+
+            var imagebuffer = null;
+            var imagetype = null;
+            
+            if(this.props.posts[this.props.post_index]['image'] != null) {
+                imagebuffer=this.props.posts[this.props.post_index]['image']['data']['data'];
+                imagetype='data:'+this.props.posts[this.props.post_index]['image']['contentType'];
+            }
+            console.log("postslength: " +this.props.posts.length);
+            
+            return(
+                <Container>
                     <Content>
                     <GestureRecognizer
                         onSwipeLeft={() => this.onSwipeLeft()}
@@ -71,15 +141,14 @@ class ItemDisplayComponent extends Component {
                                 <Body style={{alignItems: "center"}}>
                                     <View style={{flex: 1, height: SCREEN_HEIGHT*.52}}>
                                     <Image
-                                        style={{flex:1, resizeMode: 'contain'}}
-                                        source={require('../../assets/images/jacket.jpg')}
-                                    />
+                                        style={{flex:1, width: SCREEN_WIDTH, resizeMode: 'contain'}}
+                                        source={{uri: imagetype+";base64,"+base64ArrayBuffer(imagebuffer)}}                                    />
                                     </View>
                                     {
-                                        this.props.showFullText ?
-                                        <Text>Jacket. Amazing denim fabric with stretch that allows for easy movement. It uses 11.5 ounces denim of Cone Mills, a world-reknowned denim manufacturer. Researched and developed at Jeans Innovation Center. In response to customer feedback, we've added a handy hip pocket.</Text>
+                                        this.props.showFullText ? 
+                                        <Text>{this.props.posts[this.props.post_index]['description']}</Text>
                                         :
-                                        <Text numberOfLines={3}>Jacket. Amazing denim fabric with stretch that allows for easy movement. It uses 11.5 ounces denim of Cone Mills, a world-reknowned denim manufacturer. Researched and developed at Jeans Innovation Center. In response to customer feedback, we've added a handy hip pocket.</Text>
+                                        <Text numberOfLines={3}>{this.props.posts[this.props.post_index]['description']}</Text>
                                     }
                                     {
                                         this.props.showFullText ?
@@ -92,9 +161,9 @@ class ItemDisplayComponent extends Component {
                         </Card>
                     </GestureRecognizer>
                     <View  style={styles.container}>
-                        <Button primary large rounded onPress={() => this.onSwipeRight()} iconLeft><Icon name='thumbs-up' /><Text>Buy</Text></Button>
-                        <Button success large rounded><Text> SKIP </Text></Button>
                         <Button danger large rounded onPress={() => this.onSwipeLeft()} iconLeft><Icon name='thumbs-down' /><Text>Nah</Text></Button>
+                        <Button success large rounded onPress={() => this.skipPost()}><Text> SKIP </Text></Button>
+                        <Button primary large rounded onPress={() => this.onSwipeRight()} iconLeft><Icon name='thumbs-up' /><Text>Buy</Text></Button>
                     </View>
                     </Content>
                 </Container>
@@ -105,18 +174,20 @@ class ItemDisplayComponent extends Component {
 export { ItemDisplayComponent };
 
 const mapStateToProps = (state, ownProps) => {
-	const { post } = state;
-	const { curr_post_id, posts, showFullText } = post;
-	return {
-		...ownProps,
-		curr_post_id,
-		posts,
-		showFullText
-	};
+    const { post } = state;
+    const { showFullText, posts, curr_post_id, post_index } = post;
+    return {
+        ...ownProps,
+        showFullText,
+        posts,
+        curr_post_id,
+        post_index
+    };
 };
 
 export const ItemDisplay = connect(mapStateToProps, {
 	submit_new_vote_buy,
 	submit_new_vote_nah,
-	toggle_full_text
+    toggle_full_text,
+    skip_post
 })(ItemDisplayComponent);

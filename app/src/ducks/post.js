@@ -19,6 +19,8 @@ export const SUBMIT_NEW_VOTE_BUY_FAILURE = 'buyornah/post/SUBMIT_NEW_VOTE_BUY_FA
 export const SUBMIT_NEW_VOTE_NAH = 'buyornah/post/SUBMIT_NEW_VOTE_NAH';
 export const SUBMIT_NEW_VOTE_NAH_SUCCESS = 'buyornah/post/SUBMIT_NEW_VOTE_NAH_SUCCESS';
 export const SUBMIT_NEW_VOTE_NAH_FAILURE = 'buyornah/post/SUBMIT_NEW_VOTE_NAH_FAILURE';
+export const SKIP_POST= 'buyornah/post/SKIP_POST';
+
 
 const INITIAL_STATE = {
     loading: true,
@@ -62,7 +64,8 @@ const INITIAL_STATE = {
         }],
     comment: "",
     error_message: "",
-    showFullText: false
+    showFullText: false,
+    post_index: 0,
 };
 
 
@@ -133,12 +136,14 @@ export default function reducer(state = INITIAL_STATE, action) {
             }
         case SUBMIT_NEW_VOTE_BUY:
         case SUBMIT_NEW_VOTE_BUY_SUCCESS:
+            var new_index = (state.post_index+1)%state.posts.length;
             if (action.payload) {
                 let post = state.posts.filter(x => x['_id'] === state.curr_post_id);
-                post['buy'] = post['buy'] + 1;
+                post[0]['buy'] = post[0]['buy'] + 1;
                 return {
                     ...state,
-                    posts: [...state.posts, post]
+                    post_index: new_index,
+                    curr_post_id: state.posts[new_index]['_id']
                 }
             } else {
                 return {
@@ -152,12 +157,14 @@ export default function reducer(state = INITIAL_STATE, action) {
             }
         case SUBMIT_NEW_VOTE_NAH:
         case SUBMIT_NEW_VOTE_NAH_SUCCESS:
+            var new_index = (state.post_index+1)%state.posts.length;
             if (action.payload) {
                 let post = state.posts.filter(x => x['_id'] === state.curr_post_id);
-                post['nah'] = post['nah'] + 1;
+                post[0]['nah'] = post[0]['nah'] + 1;
                 return {
                     ...state,
-                    posts: [...state.posts, post]
+                    post_index: new_index,
+                    curr_post_id: state.posts[new_index]['_id']
                 }
             } else {
                 return {
@@ -169,6 +176,14 @@ export default function reducer(state = INITIAL_STATE, action) {
                 ...state,
                 error_message: "Something went wrong while submitting a nah vote.",
             }
+        case SKIP_POST:
+            var new_index = (state.post_index+1)%state.posts.length;
+            return {
+                ...state,
+                post_index: new_index,
+                curr_post_id: state.posts[new_index]['_id']
+            }
+                
         default:
             return state;
     }
@@ -312,3 +327,12 @@ export const toggle_full_text = () => {
         })
     }
 }
+
+export const skip_post = () => {
+    return (dispatch) => {
+        dispatch({
+            type: SKIP_POST,
+        });
+    }
+}
+
