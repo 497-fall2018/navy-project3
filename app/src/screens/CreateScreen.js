@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid  } from 'react-native';
+import React, { Component } from 'react';
+import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid } from 'react-native';
 import { WebBrowser, Icon, ImagePicker, Permissions } from 'expo';
 import { Container, Header, Content, Button, Text } from 'native-base';
 import axios from 'axios';
@@ -9,6 +9,9 @@ import Form from 'react-native-form';
 
 
 export default class CreateScreen extends Component {
+	state = {
+		image: null,
+	}
 	static navigationOptions = {
 		header: null,
 	};
@@ -18,45 +21,61 @@ export default class CreateScreen extends Component {
 			loading: true,
 			name: '',
 			description: '',
-			image: null,
 			price: ''
 		};
 	};
 
 	handleSubmit(data) {
-		console.log(data);
-		axios.post(`http://navy.mmoderwell.com/api/post/`, { 
-            "title": data.name,
-            "description": data.description,
-            "price": data.price
-        })
-          .then((response) => {
-          	console.log("success");
-          	this.props.navigation.navigate('HomeScreen');
-          })
-          .catch((error) => {console.log("err");});
+		//console.log(data);
+		axios.post(`http://navy.mmoderwell.com/api/post/`, {
+				"title": data.name,
+				"description": data.description,
+				"price": data.price,
+				"image": this.state.image.uri
+			})
+			.then((response) => {
+				console.log("success");
+				this.props.navigation.navigate('HomeScreen');
+			})
+			.catch((error) => { console.log("err"); });
 	}
 
-	_pickImage = async () => {
-		async function getCameraAsync() {
-			const { status } = await Permissions.askAsync(Permissions.CAMERA);
-			if (status === 'granted') {
-				getCameraRollAsync();
-			} else {
-			  throw new Error('Camera permissions not granted');
-			}
+	//_pickImage = async() => {
+	// async function getCameraAsync() {
+	// 	const { status } = await Permissions.askAsync(Permissions.CAMERA);
+	// 	if (status === 'granted') {
+	// 		getCameraRollAsync();
+	// 	} else {
+	// 		throw new Error('Camera permissions not granted');
+	// 	}
+	// }
+	// async function getCameraRollAsync() {
+	// 	const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+	// 	if (status === 'granted') {
+	// 		image = await ImagePicker.launchImageLibraryAsync({ base64: true }).catch(error => console.log({ error }));
+	// 	} else {
+	// 		throw new Error('Camera permissions not granted');
+	// 	}
+	// }
+	// getCameraAsync();
+	// if (!image.cancelled) {
+	// 	this.setState({ image: image.uri });
+	// }
+
+	_pickImage = async() => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			aspect: [1, 1],
+			base64: true,
+		});
+
+		//console.log(result);
+
+		if (!result.cancelled) {
+			this.setState({ image: result.uri });
 		}
-		async function getCameraRollAsync() {
-			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-			if (status === 'granted') {
-				let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
-			} else {
-			  throw new Error('Camera permissions not granted');
-			}
-		}
-		getCameraAsync();
-		//let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
 	};
+	//};
 
 	async componentWillMount() {
 		await Expo.Font.loadAsync({
@@ -95,6 +114,7 @@ export default class CreateScreen extends Component {
 							onChangeText={(description) => this.setState({description})} multiline = {true} numberOfLines = {4} maxLength = {240} />
 						</View>
 					</Form>
+					{image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
 					<TouchableHighlight style={styles.camera_button} onPress={this._pickImage} >
 						<View>
 							<Icon.Ionicons
@@ -128,7 +148,7 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		alignItems: 'center',
 		paddingBottom: 50,
-	},	
+	},
 	text_input: {
 		paddingLeft: 10,
 	},
