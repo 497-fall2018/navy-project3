@@ -64,15 +64,6 @@ export default class App extends React.Component {
 	};
 }
 
-// const myApp = DrawerNavigator({
-// 	Home: {
-// 		screen: HomeScreen
-// 	},
-// 	Settings: {
-// 		screen: SettingsScreen
-// 	}
-// })
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,

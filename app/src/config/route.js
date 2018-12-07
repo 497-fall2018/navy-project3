@@ -56,7 +56,6 @@ const MainTabRouteConfig = {
         screen: ListScreen,
         navigationOptions: {
             tabBarLabel: 'List Items',
-            tabBarLabel: 'New Post',
             // Note: By default the icon is only shown on iOS. Search the showIcon option below.
             tabBarIcon: ({ focused }) => (
                 <TabBarIcon
@@ -93,7 +92,8 @@ const AppRouteConfigs = {
 
 const AppNavigator = StackNavigator(
     AppRouteConfigs, {
-        headerMode: 'screen'
+        headerMode: 'screen',
+        headerTitle: 'BuyOrNah'
     }
 );
 
