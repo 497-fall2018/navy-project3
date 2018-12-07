@@ -17,26 +17,34 @@ module.exports = (app) => {
 	});
 	// make a new post
 	app.post('/api/post', (req, res) => {
-		let form = new formidable.IncomingForm()
-		form.keepExtensions = true
-		form.parse(req, (err, fields, files) => {
-			if (err) {
-				return res.status(400).json({
-					error: "Image could not be uploaded"
-				})
-			}
-			let item = new Post(fields);
-			item['buy'] = 0;
-			item['nah'] = 0;
-			if(files.image){
-				item.image.data = fs.readFileSync(files.image.path);
-				item.image.contentType = files.image.type;
-			}
-			item.save((err, result) => {
-				if (err) return res.json({ success: false, error: err });
-				return res.json({ success: true });
-			});
+		console.log("in routes");
+		console.log(req.body);
+		let item = new Post(req.body);
+		item.save((err, result) => {
+			if (err) return res.json({ success: false, error: err });
+			console.log(item);
+			return res.json({ success: true });
 		});
+		// let form = new formidable.IncomingForm()
+		// form.keepExtensions = true
+		// form.parse(req, (err, fields, files) => {
+		// 	if (err) {
+		// 		return res.status(400).json({
+		// 			error: "Image could not be uploaded"
+		// 		})
+		// 	}
+		// 	let item = new Post(fields);
+		// 	item['buy'] = 0;
+		// 	item['nah'] = 0;
+		// 	if(files.image){
+		// 		item.image.data = fs.readFileSync(files.image.path);
+		// 		item.image.contentType = files.image.type;
+		// 	}
+		// 	item.save((err, result) => {
+		// 		if (err) return res.json({ success: false, error: err });
+		// 		return res.json({ success: true });
+		// 	});
+		// });
 	});
 
 	// add a comment to a post

@@ -13,14 +13,14 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 mongoose.Promise = global.Promise;
 
 //connect to database
-mongoose.connect('mongodb://mmoderwell.com:27018/buyornah').then(() => console.log('Connected to buyornah database.'))
-	.catch((e) => {
-		console.error('Connection to mongodb failed.');
-	});
-// mongoose.connect('mongodb://localhost:27017/buyornah').then(() => console.log('Connected to buyornah database.'))
+// mongoose.connect('mongodb://mmoderwell.com:27018/buyornah').then(() => console.log('Connected to buyornah database.'))
 // 	.catch((e) => {
 // 		console.error('Connection to mongodb failed.');
 // 	});
+mongoose.connect('mongodb://localhost:27017/buyornah').then(() => console.log('Connected to buyornah database.'))
+	.catch((e) => {
+		console.error('Connection to mongodb failed.');
+	});
 
 //the database connection is disconnected
 mongoose.connection.on('disconnected', function () {
