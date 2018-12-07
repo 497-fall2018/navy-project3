@@ -9,13 +9,13 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {
-    handle_swipe_right,
-    handle_swipe_left,
+    submit_new_vote_buy,
+    submit_new_vote_nah,
     toggle_full_text
 } from '../../ducks/post';
 
 import SCREEN_IMPORT from 'Dimensions'
-  
+
 const SCREEN_WIDTH = SCREEN_IMPORT.get('window').width;
 const SCREEN_HEIGHT = SCREEN_IMPORT.get('window').height;
 
@@ -31,12 +31,18 @@ const styles = ({
 
 class ItemDisplayComponent extends Component {
     onSwipeLeft(gestureState) {
-        Alert.alert('NAH!');
-        this.props.handle_swipe_left();
+        let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
+        let new_nah_vote = post[0]['nah']+1;
+        let str = "NAH! \n buy: " + post[0]['buy'].toString() + "\n nah: " + new_nah_vote.toString();
+        Alert.alert(str);
+        this.props.submit_new_vote_nah(new_nah_vote, this.props.curr_post_id);
     }
     onSwipeRight(gestureState) {
-        Alert.alert('BUY!');
-        this.props.handle_swipe_right();
+        let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
+        let new_buy_vote = post[0]['buy']+1;
+        let str = "BUY! \n buy: " + new_buy_vote.toString() + "\n nah: " + post[0]['nah'].toString();
+        Alert.alert(str);
+        this.props.submit_new_vote_buy(new_buy_vote, this.props.curr_post_id);
     }
     toggleFullText = () => {
         this.props.toggle_full_text();
@@ -62,7 +68,7 @@ class ItemDisplayComponent extends Component {
                                     />
                                     </View>
                                     {
-                                        this.props.showFullText ? 
+                                        this.props.showFullText ?
                                         <Text>Jacket. Amazing denim fabric with stretch that allows for easy movement. It uses 11.5 ounces denim of Cone Mills, a world-reknowned denim manufacturer. Researched and developed at Jeans Innovation Center. In response to customer feedback, we've added a handy hip pocket.</Text>
                                         :
                                         <Text numberOfLines={3}>Jacket. Amazing denim fabric with stretch that allows for easy movement. It uses 11.5 ounces denim of Cone Mills, a world-reknowned denim manufacturer. Researched and developed at Jeans Innovation Center. In response to customer feedback, we've added a handy hip pocket.</Text>
@@ -92,15 +98,17 @@ export { ItemDisplayComponent };
 
 const mapStateToProps = (state, ownProps) => {
     const { post } = state;
-    const { showFullText } = post;
+    const { curr_post_id, posts, showFullText } = post;
     return {
         ...ownProps,
+        curr_post_id,
+        posts,
         showFullText
     };
 };
 
 export const ItemDisplay = connect(mapStateToProps, {
-    handle_swipe_left,
-    handle_swipe_right,
+    submit_new_vote_buy,
+    submit_new_vote_nah,
     toggle_full_text
 })(ItemDisplayComponent);

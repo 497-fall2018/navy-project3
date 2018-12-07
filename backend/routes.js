@@ -26,6 +26,8 @@ module.exports = (app) => {
 				})
 			}
 			let item = new Post(fields);
+			item['buy'] = 0;
+			item['nah'] = 0;
 			if(files.image){
 				item.image.data = fs.readFileSync(files.image.path);
 				item.image.contentType = files.image.type;
@@ -38,13 +40,30 @@ module.exports = (app) => {
 	});
 
 	// add a comment to a post
+	// app.post('/api/post/:post_id', (req, res) => {
+	// 	const { post_id } = req.params;
+	// 	const data = req.body;
+	//
+	// 	Post.findById(post_id, (error, post) => {
+	// 		if (error) return res.json({ success: false, error });
+	// 		post.comments.push({ text: data.text});
+	// 		post.save(error => {
+	// 			if (error) return res.json({ success: false, error: error });
+	// 			return res.json({ success: true });
+	// 		});
+	// 	});
+	// });
+
+	// add a comment or a vote to a post
 	app.post('/api/post/:post_id', (req, res) => {
 		const { post_id } = req.params;
 		const data = req.body;
 
 		Post.findById(post_id, (error, post) => {
 			if (error) return res.json({ success: false, error });
-			post.comments.push({ text: data.text});
+			if (data.text) post.comments.push({ text: data.text});
+			if (data.buy) post['buy'] = data.buy;
+			if (data.nah) post['nah'] = data.nah;
 			post.save(error => {
 				if (error) return res.json({ success: false, error: error });
 				return res.json({ success: true });
