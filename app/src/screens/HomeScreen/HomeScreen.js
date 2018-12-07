@@ -16,6 +16,7 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 import {
   CommentsList,
+  ItemDisplay
 } from '../../components';
 import styles from './styles';
 const {
@@ -48,6 +49,7 @@ import {
     loaded_fonts,
     submit_new_comment
 } from '../../ducks/post'
+
 
 class HomeScreenComponent extends Component {
     static navigationOptions = {
@@ -91,20 +93,13 @@ class HomeScreenComponent extends Component {
         return (
             <Container
             >
-                <View style={container}>
-                    <Container style={buttonsContainer}>
-                        <Button danger large rounded><Text> X </Text></Button>
-                        <Button success large rounded><Text> SKIP </Text></Button>
-                        <Button primary large rounded><Text> O </Text></Button>
-                    </Container>
+                <View style={{flex: 1}}>
+                    <ItemDisplay/>
                     <Text>{"   post id: " + this.props.posts[0]["_id"]}</Text>
                     <GestureRecognizer
                         onSwipeUp={(state) => this.onSwipeUp(state)}
                         onSwipeDown={(state) => this.onSwipeDown(state)}
                         config={config}
-                        style={{
-                          flex: 1,
-                        }}
                     >
                         <View style={swipeUpCommentContainer}>
                             <Text style={swipeUpCommentText}> {this.props.showComments == true ? "swipe down to hide comments":"swipe up to see comments"} </Text>
