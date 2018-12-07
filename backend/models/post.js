@@ -16,7 +16,8 @@ const postSchema = new Schema({
     description: String,
     comments: [commentSchema],
     buy: Number,
-    nah: Number
+    nah: Number,
+    price: Number
     //author: user,
 });
 

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid,  } from 'react-native';
 import { WebBrowser, Icon, ImagePicker, Permissions } from 'expo';
 import { Container, Header, Content, Button, Text } from 'native-base';
+import axios from 'axios';
 
 import Form from 'react-native-form'
 
@@ -17,8 +18,20 @@ export default class HomeScreen extends Component {
 			name: '',
 			description: '',
 			image: null,
+			price: ''
 		};
 	};
+
+	handleSubmit(data) {
+		console.log(data);
+		axios.post(`http://navy.mmoderwell.com/api/post/`, { 
+            "title": data.name,
+            "description": data.description,
+            "price": data.price
+        })
+          .then(console.log("success"))
+          .catch(console.log("err"));
+	}
 
 	_pickImage = async () => {
 		async function getCameraAsync() {
@@ -64,9 +77,14 @@ export default class HomeScreen extends Component {
 					</Text>
 					<Form ref="form">
 						<View style={styles.text_div}>
-							<Text>Name</Text>
+							<Text>Title</Text>
 							<TextInput style={styles.text_input} type="TextInput" name="nameInput" value={this.state.name} 
 							onChangeText={(name) => this.setState({name})} />
+						</View>
+						<View style={styles.text_div}>
+							<Text>Price</Text>
+							<TextInput style={styles.text_input} type="TextInput" name="priceInput" value={this.state.price} 
+							onChangeText={(price) => this.setState({price})} />
 						</View>
 						<View style={styles.text_div}>
 							<Text>Description</Text>
@@ -85,7 +103,7 @@ export default class HomeScreen extends Component {
 					</TouchableHighlight>
 				</View>
 				<View style={styles.submitContainer}>
-					<Button style={styles.submit_button}>
+					<Button style={styles.submit_button} onPress={() => this.handleSubmit(this.state)}>
 						<Text>Submit</Text>
 					</Button>
 				</View>
