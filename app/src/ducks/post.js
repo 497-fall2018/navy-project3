@@ -9,13 +9,16 @@ export const LOADED_FONTS = 'buyornah/post/LOADED_FONTS';
 export const HANDLE_COMMENT_CHANGE = 'buyornah/post/HANDLE_COMMENT_CHANGE';
 export const HANDLE_SWIPE_DOWN = 'buyornah/post/HANDLE_SWIPE_DOWN';
 export const HANDLE_SWIPE_UP = 'buyornah/post/HANDLE_SWIPE_UP';
-export const HANDLE_SWIPE_LEFT = 'buyornah/post/HANDLE_SWIPE_LEFT';
-export const HANDLE_SWIPE_RIGHT = 'buyornah/post/HANDLE_SWIPE_RIGHT';
 export const TOGGLE_FULL_TEXT = 'buyornah/post/TOGGLE_FULL_TEXT';
 export const SUBMIT_NEW_COMMENT = 'buyornah/post/SUBMIT_NEW_COMMENT';
 export const SUBMIT_NEW_COMMENT_SUCCESS = 'buyornah/post/SUBMIT_NEW_COMMENT_SUCCESS';
 export const SUBMIT_NEW_COMMENT_FAILURE = 'buyornah/post/SUBMIT_NEW_COMMENT_FAILURE';
-
+export const SUBMIT_NEW_VOTE_BUY = 'buyornah/post/SUBMIT_NEW_VOTE_BUY';
+export const SUBMIT_NEW_VOTE_BUY_SUCCESS = 'buyornah/post/SUBMIT_NEW_VOTE_BUY_SUCCESS';
+export const SUBMIT_NEW_VOTE_BUY_FAILURE = 'buyornah/post/SUBMIT_NEW_VOTE_BUY_FAILURE';
+export const SUBMIT_NEW_VOTE_NAH = 'buyornah/post/SUBMIT_NEW_VOTE_NAH';
+export const SUBMIT_NEW_VOTE_NAH_SUCCESS = 'buyornah/post/SUBMIT_NEW_VOTE_NAH_SUCCESS';
+export const SUBMIT_NEW_VOTE_NAH_FAILURE = 'buyornah/post/SUBMIT_NEW_VOTE_NAH_FAILURE';
 
 const INITIAL_STATE = {
     loading: true,
@@ -30,8 +33,23 @@ const INITIAL_STATE = {
                     "text": "Yes get it! It's at a really good price!"
                 },
             ],
-            "__v": 1
-        },],
+            "__v": 1,
+            "buy": 3,
+            "nah": 1
+        },{
+                "_id": "5c0606d1a1cf240319197af5",
+                "title": "car",
+                "description": "ohoh",
+                "comments": [
+                    {
+                        "_id": "5c060786063fa80335dd2cd3",
+                        "text": "TT"
+                    },
+                ],
+                "__v": 1,
+                "buy": 0,
+                "nah": 10
+            }],
     curr_post_id: "5c0606d1a1cf240319197af4",
     comments:
         [{
@@ -108,18 +126,48 @@ export default function reducer(state = INITIAL_STATE, action) {
                 ...state,
                 error_message: "Something went wrong while submitting a new comment.",
             }
-        case HANDLE_SWIPE_RIGHT:
-            return {
-                ...state
-            }
-        case HANDLE_SWIPE_LEFT:
-            return {
-                ...state
-            }
         case TOGGLE_FULL_TEXT:
             return {
                 ...state,
                 showFullText: !state.showFullText
+            }
+        case SUBMIT_NEW_VOTE_BUY:
+        case SUBMIT_NEW_VOTE_BUY_SUCCESS:
+            if (action.payload) {
+                let post = state.posts.filter(x => x['_id'] === state.curr_post_id);
+                post['buy'] = post['buy'] + 1;
+                return {
+                    ...state,
+                    posts: [...state.posts, post]
+                }
+            } else {
+                return {
+                    ...state,
+                }
+            }
+        case SUBMIT_NEW_VOTE_BUY_FAILURE:
+            return {
+                ...state,
+                error_message: "Something went wrong while submitting a buy vote.",
+            }
+        case SUBMIT_NEW_VOTE_NAH:
+        case SUBMIT_NEW_VOTE_NAH_SUCCESS:
+            if (action.payload) {
+                let post = state.posts.filter(x => x['_id'] === state.curr_post_id);
+                post['nah'] = post['nah'] + 1;
+                return {
+                    ...state,
+                    posts: [...state.posts, post]
+                }
+            } else {
+                return {
+                    ...state,
+                }
+            }
+        case SUBMIT_NEW_VOTE_NAH_FAILURE:
+            return {
+                ...state,
+                error_message: "Something went wrong while submitting a nah vote.",
             }
         default:
             return state;
@@ -164,7 +212,7 @@ export const load_posts = () => {
         dispatch({
             type: LOAD_POSTS,
         });
-        axios.get(`http://navy.mmoderwell.com/api/post/`)
+        axios.get(`http://10.105.236.104:3001/api/post/`)
           .then((response) => load_posts_success(dispatch, response))
           .catch((error) => load_posts_failure(dispatch, error))
     }
@@ -189,24 +237,19 @@ export const submit_new_comment = (cmt, curr_post_id) => {
         dispatch({
                 type: SUBMIT_NEW_COMMENT,
         });
-        axios.post(`http://navy.mmoderwell.com/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+        axios.post(`http://10.105.236.104:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
             "text": cmt
         })
           .then((response) => submit_new_comment_success(dispatch, response))
           .catch((error) => submit_new_comment_failure(dispatch, error))
     }
 }
-
 export const submit_new_comment_success = (dispatch, response) => {
     dispatch({
         type: SUBMIT_NEW_COMMENT_SUCCESS,
         payload: response.data,
     });
-    dispatch({
-            type: LOAD_POSTS,
-    });
 }
-
 export const submit_new_comment_failure = (dispatch, error) => {
     console.log(error)
     dispatch({
@@ -214,20 +257,54 @@ export const submit_new_comment_failure = (dispatch, error) => {
     });
 }
 
-export const handle_swipe_left = () => {
+export const submit_new_vote_buy = (buy_vote, curr_post_id) => {
     return (dispatch) => {
         dispatch({
-            type: HANDLE_SWIPE_LEFT
+                type: SUBMIT_NEW_VOTE_BUY,
+        });
+        axios.post(`http://10.105.236.104:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+            "buy": buy_vote
         })
+          .then((response) => submit_new_vote_buy_success(dispatch, response))
+          .catch((error) => submit_new_vote_buy_failure(dispatch, error))
     }
 }
-export const handle_swipe_right = () => {
+export const submit_new_vote_buy_success = (dispatch, response) => {
+    dispatch({
+        type: SUBMIT_NEW_VOTE_BUY_SUCCESS,
+        payload: response.data,
+    });
+}
+export const submit_new_vote_buy_failure = (dispatch, error) => {
+    dispatch({
+        type: SUBMIT_NEW_VOTE_BUY_FAILURE,
+    });
+}
+
+export const submit_new_vote_nah = (nah_vote, curr_post_id) => {
     return (dispatch) => {
         dispatch({
-            type: HANDLE_SWIPE_RIGHT
+                type: SUBMIT_NEW_VOTE_NAH,
+        });
+        axios.post(`http://10.105.236.104:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+            "nah": nah_vote
         })
+          .then((response) => submit_new_vote_nah_success(dispatch, response))
+          .catch((error) => submit_new_vote_nah_failure(dispatch, error))
     }
 }
+export const submit_new_vote_nah_success = (dispatch, response) => {
+    dispatch({
+        type: SUBMIT_NEW_VOTE_NAH_SUCCESS,
+        payload: response.data,
+    });
+}
+export const submit_new_vote_nah_failure = (dispatch, error) => {
+    dispatch({
+        type: SUBMIT_NEW_VOTE_NAH_FAILURE,
+    });
+}
+
 export const toggle_full_text = () => {
     return (dispatch) => {
         dispatch({

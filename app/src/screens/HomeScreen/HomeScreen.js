@@ -12,11 +12,11 @@ import {
 import { WebBrowser } from 'expo';
 import { Container, Header, Content, Button, Input, InputGroup, Text } from 'native-base';
 import { Icon } from 'react-native-elements';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 import {
-  CommentsList,
-  ItemDisplay
+    CommentsList,
+    ItemDisplay
 } from '../../components';
 import styles from './styles';
 const {
@@ -119,7 +119,7 @@ class HomeScreenComponent extends Component {
                         <Container style={{flexDirection:"row", height: 60}}>
                             <View style={{width: '80%', marginLeft: 10}}>
                                 <InputGroup borderType="rounded" >
-                                    <Input onChangeText={(text)=>this.handleCommentChange(text)} value={this.props.comment}/>
+                                    <Input onChangeText={(text)=>this.handleCommentChange(text)} placeholder={"Say something..."} value={this.props.comment}/>
                                 </InputGroup>
                             </View>
                             <View style={{justifyContent: 'center'}}>
