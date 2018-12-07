@@ -140,7 +140,7 @@ class ItemDisplayComponent extends Component {
                         <Card style={{flex: 1}}>
                             <CardItem>
                                 <Body style={{alignItems: "center"}}>
-                                    <View style={{flex: 1, height: SCREEN_HEIGHT*.5}}>
+                                    <View style={{flex: 1, height: SCREEN_HEIGHT*.45}}>
                                         <Image
                                             style={{flex:1, width: SCREEN_WIDTH, resizeMode: 'contain'}}
                                             source={{uri: imagetype+";base64,"+base64ArrayBuffer(imagebuffer)}} />
