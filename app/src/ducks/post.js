@@ -99,8 +99,8 @@ export default function reducer(state = INITIAL_STATE, action) {
                 return {
                     ...state,
                     posts: action.payload.data,
-                    curr_post_id: action.payload.data[0]["_id"],
-                    comments: action.payload.data[0]["comments"]
+                    curr_post_id: action.payload.data[state.post_index]["_id"],
+                    comments: action.payload.data[state.post_index]["comments"]
                 }
             }
         case LOAD_POSTS_FAILURE:
