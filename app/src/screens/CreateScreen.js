@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid,  } from 'react-native';
+import { Image, Platform, ScrollView, StyleSheet, TouchableHighlight, View, TextInput, Switch, PermissionsAndroid  } from 'react-native';
 import { WebBrowser, Icon, ImagePicker, Permissions } from 'expo';
 import { Container, Header, Content, Button, Text } from 'native-base';
 import axios from 'axios';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import Form from 'react-native-form'
+import Form from 'react-native-form';
 
 
-export default class HomeScreen extends Component {
+export default class CreateScreen extends Component {
 	static navigationOptions = {
 		header: null,
 	};
@@ -29,8 +30,11 @@ export default class HomeScreen extends Component {
             "description": data.description,
             "price": data.price
         })
-          .then(console.log("success"))
-          .catch(console.log("err"));
+          .then((response) => {
+          	console.log("success");
+          	this.props.navigation.navigate('HomeScreen');
+          })
+          .catch((error) => {console.log("err");});
 	}
 
 	_pickImage = async () => {
@@ -69,8 +73,7 @@ export default class HomeScreen extends Component {
 			return <Expo.AppLoading />;
 		}
 		return (
-			<View style={styles.container}>
-				<Header/>
+			<ScrollView style={styles.container}>
 				<View style={styles.formContainer}>
 					<Text style={styles.title}>
 						Lets add a <Text style={{fontWeight: 'bold', fontSize: 30}} >new item</Text>					
@@ -107,7 +110,7 @@ export default class HomeScreen extends Component {
 						<Text>Submit</Text>
 					</Button>
 				</View>
-	 		</View>
+	 		</ScrollView>
 		);
 	}
 }
