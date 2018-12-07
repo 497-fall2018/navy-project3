@@ -91,8 +91,7 @@ class HomeScreenComponent extends Component {
             return <Expo.AppLoading />;
         }
         return (
-            <Container
-            >
+            <Container>
                 <View style={{flex: 1}}>
                     <ItemDisplay/>
                     <Text>{"   post id: " + this.props.posts[0]["_id"]}</Text>
