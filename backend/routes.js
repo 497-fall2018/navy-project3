@@ -20,6 +20,8 @@ module.exports = (app) => {
 		console.log("in routes");
 		console.log(req.body);
 		let item = new Post(req.body);
+		item['buy'] = 0;
+		item['nah'] = 0;
 		item.save((err, result) => {
 			if (err) return res.json({ success: false, error: err });
 			console.log(item);
@@ -69,6 +71,7 @@ module.exports = (app) => {
 
 		Post.findById(post_id, (error, post) => {
 			if (error) return res.json({ success: false, error });
+			if (data.price) post['price'] = data.price;
 			if (data.text) post.comments.push({ text: data.text});
 			if (data.buy) post['buy'] = data.buy;
 			if (data.nah) post['nah'] = data.nah;
