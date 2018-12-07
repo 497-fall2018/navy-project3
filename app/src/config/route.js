@@ -28,14 +28,14 @@ const MainTabRouteConfig = {
             tabBarLabel: 'Home',
             // Note: By default the icon is only shown on iOS. Search the showIcon option below.
             tabBarIcon: ({ focused }) => (
-          	<TabBarIcon
-                focused={focused}
-                name={
-                    Platform.OS === 'ios'
-                    ? `ios-information-circle${focused ? '' : '-outline'}`
-                    : 'md-information-circle'
-                }
-        	/>
+                <TabBarIcon
+                    focused={focused}
+                    name={
+                        Platform.OS === 'ios'
+                        ? `ios-home${focused ? '' : '-outline'}`
+                        : 'md-home'
+                    }
+                />
             ),
         }
     },
@@ -56,24 +56,12 @@ const MainTabRouteConfig = {
         screen: ListScreen,
         navigationOptions: {
             tabBarLabel: 'List Items',
+            tabBarLabel: 'New Post',
             // Note: By default the icon is only shown on iOS. Search the showIcon option below.
             tabBarIcon: ({ focused }) => (
                 <TabBarIcon
                     focused={focused}
                     name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'}
-                />
-            ),
-        }
-    },
-    SettingsScreen: {
-        screen: SettingsScreen,
-        navigationOptions: {
-            tabBarLabel: 'Settings',
-            // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-            tabBarIcon: ({ focused }) => (
-                <TabBarIcon
-                    focused={focused}
-                    name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
                 />
             ),
         }
