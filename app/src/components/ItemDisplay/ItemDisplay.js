@@ -14,11 +14,16 @@ import {
     toggle_full_text
 } from '../../ducks/post';
 
+import SCREEN_IMPORT from 'Dimensions'
+  
+const SCREEN_WIDTH = SCREEN_IMPORT.get('window').width;
+const SCREEN_HEIGHT = SCREEN_IMPORT.get('window').height;
+
 const styles = ({
     container: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'center'
     },
     button: {
     }
@@ -47,13 +52,15 @@ class ItemDisplayComponent extends Component {
                             flex: 1,
                         }}
                     >
-                        <Card style={{flex: 0}}>
+                        <Card style={{flex: 1}}>
                             <CardItem>
                                 <Body style={{alignItems: "center"}}>
+                                    <View style={{flex: 1, height: SCREEN_HEIGHT*.52}}>
                                     <Image
-                                        style={{flex:1, height: 200, width: 200}}
+                                        style={{flex:1, resizeMode: 'contain'}}
                                         source={require('../../assets/images/jacket.jpg')}
                                     />
+                                    </View>
                                     {
                                         this.props.showFullText ? 
                                         <Text>Jacket. Amazing denim fabric with stretch that allows for easy movement. It uses 11.5 ounces denim of Cone Mills, a world-reknowned denim manufacturer. Researched and developed at Jeans Innovation Center. In response to customer feedback, we've added a handy hip pocket.</Text>

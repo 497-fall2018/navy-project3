@@ -43,7 +43,7 @@ const INITIAL_STATE = {
             "text": "I think your dad will love it :)"
         }],
     comment: "",
-    error_message: ""
+    error_message: "",
     showFullText: false
 };
 

@@ -93,7 +93,7 @@ class HomeScreenComponent extends Component {
         return (
             <Container
             >
-                <View style={container}>
+                <View style={{flex: 1}}>
                     <ItemDisplay/>
                     <Text>{"   post id: " + this.props.posts[0]["_id"]}</Text>
                     <GestureRecognizer
