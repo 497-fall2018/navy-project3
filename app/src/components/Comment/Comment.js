@@ -37,8 +37,8 @@ class CommentComponent extends Component {
     render() {
         console.log(this.props.text);
         // const oldComment = this.props.data.find(c => c._id === this.props.id);
-        return(
-            <View style={commentContainer}>
+        return (
+            <View style={commentContainer} borderRadius={10}>
                 <Text>{this.props.text}</Text>
             </View>
         );
