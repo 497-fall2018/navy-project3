@@ -80,7 +80,7 @@ class HomeScreenComponent extends Component {
         this.props.submit_new_comment(this.props.comment, this.props.curr_post_id);
         setTimeout(() => {
             this.props.load_posts();
-        }, 1000);
+        }, 500);
     }
     render() {
         const config = {
