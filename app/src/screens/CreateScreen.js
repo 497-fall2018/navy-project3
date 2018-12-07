@@ -24,7 +24,7 @@ export default class HomeScreen extends Component {
 
 	handleSubmit(data) {
 		console.log(data);
-		axios.post(`http://10.105.153.45:3001/api/post/`, { 
+		axios.post(`http://navy.mmoderwell.com/api/post/`, { 
             "title": data.name,
             "description": data.description,
             "price": data.price
