@@ -143,7 +143,8 @@ export default function reducer(state = INITIAL_STATE, action) {
                 return {
                     ...state,
                     post_index: new_index,
-                    curr_post_id: state.posts[new_index]['_id']
+                    curr_post_id: state.posts[new_index]['_id'],
+                    comments: state.posts[new_index]['comments']
                 }
             } else {
                 return {
@@ -164,7 +165,8 @@ export default function reducer(state = INITIAL_STATE, action) {
                 return {
                     ...state,
                     post_index: new_index,
-                    curr_post_id: state.posts[new_index]['_id']
+                    curr_post_id: state.posts[new_index]['_id'],
+                    comments: state.posts[new_index]['comments']
                 }
             } else {
                 return {
@@ -181,7 +183,8 @@ export default function reducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 post_index: new_index,
-                curr_post_id: state.posts[new_index]['_id']
+                curr_post_id: state.posts[new_index]['_id'],
+                comments: state.posts[new_index]['comments']
             }
                 
         default:

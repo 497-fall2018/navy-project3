@@ -30,6 +30,7 @@ const {
 
 class CommentsListComponent extends Component {
     render() {
+        console.log(this.props.comments)
         const commentNodes = (this.props.comments).map(comment => (
             <Comment
               text={comment.text}

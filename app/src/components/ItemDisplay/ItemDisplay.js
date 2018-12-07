@@ -125,6 +125,7 @@ class ItemDisplayComponent extends Component {
                 imagetype='data:'+this.props.posts[this.props.post_index]['image']['contentType'];
             }
             console.log("postsIndex: " +this.props.post_index);
+            console.log("current post id: "+this.props.curr_post_id);
             
             return(
                 <Container>
