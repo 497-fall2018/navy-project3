@@ -164,7 +164,7 @@ export const load_posts = () => {
         dispatch({
             type: LOAD_POSTS,
         });
-        axios.get(`http://192.168.1.66:3001/api/post/`)
+        axios.get(`http://navy.mmoderwell.com/api/post/`)
           .then((response) => load_posts_success(dispatch, response))
           .catch((error) => load_posts_failure(dispatch, error))
     }
@@ -189,7 +189,7 @@ export const submit_new_comment = (cmt, curr_post_id) => {
         dispatch({
                 type: SUBMIT_NEW_COMMENT,
         });
-        axios.post(`http://192.168.1.66:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+        axios.post(`http://navy.mmoderwell.com/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
             "text": cmt
         })
           .then((response) => submit_new_comment_success(dispatch, response))
