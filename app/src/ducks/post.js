@@ -62,7 +62,8 @@ const INITIAL_STATE = {
         }],
     comment: "",
     error_message: "",
-    showFullText: false
+    showFullText: false,
+    post_index: 0,
 };
 
 
