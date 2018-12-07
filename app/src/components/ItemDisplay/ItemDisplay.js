@@ -19,7 +19,8 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import {
 	submit_new_vote_buy,
 	submit_new_vote_nah,
-	toggle_full_text
+    toggle_full_text,
+    skip_post
 } from '../../ducks/post';
 
 
@@ -40,36 +41,26 @@ const styles = ({
 
 class ItemDisplayComponent extends Component {
 	onSwipeLeft(gestureState) {
-		let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
-		let new_nah_vote = post[0]['nah'] + 1;
-		let str = "NAH! \n buy: " + post[0]['buy'].toString() + "\n nah: " + new_nah_vote.toString();
-		Alert.alert(str);
+        let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
+        let new_nah_vote = post[0]['nah'] + 1;
+        let str = "You vote NAH!";
+        let str2 = "Current votes for BUY: " + post[0]['buy'].toString() + "\nCurrent votes for NAH: " + new_nah_vote.toString();
+		Alert.alert(str, str2);
 		this.props.submit_new_vote_nah(new_nah_vote, this.props.curr_post_id);
 	}
 	onSwipeRight(gestureState) {
 		let post = this.props.posts.filter(x => x['_id'] === this.props.curr_post_id);
 		let new_buy_vote = post[0]['buy'] + 1;
-		let str = "BUY! \n buy: " + new_buy_vote.toString() + "\n nah: " + post[0]['nah'].toString();
-		Alert.alert(str);
+        let str = "You voted BUY!"
+        let str2= "Current votes for BUY: " + new_buy_vote.toString() + "\nCurrent votes for NAH: " + post[0]['nah'].toString();
+		Alert.alert(str, str2);
 		this.props.submit_new_vote_buy(new_buy_vote, this.props.curr_post_id);
 	}
 	toggleFullText = () => {
 		this.props.toggle_full_text();
-	}
-	render() {
-		return (
-			<Container>
-    onSwipeLeft(gestureState) {
-        Alert.alert('NAH!');
-        this.props.handle_swipe_left();
     }
-    onSwipeRight(gestureState) {
-        Alert.alert(this.props.post_index);
-        console.log(this.props.post_index)
-        this.props.handle_swipe_right();
-    }
-    toggleFullText = () => {
-        this.props.toggle_full_text();
+    skipPost = () =>{
+        this.props.skip_post();
     }
 
         render(){
@@ -133,7 +124,7 @@ class ItemDisplayComponent extends Component {
                 imagebuffer=this.props.posts[this.props.post_index]['image']['data']['data'];
                 imagetype='data:'+this.props.posts[this.props.post_index]['image']['contentType'];
             }
-            console.log(imagetype+";base64,");
+            console.log("postslength: " +this.props.posts.length);
             
             return(
                 <Container>
@@ -170,9 +161,9 @@ class ItemDisplayComponent extends Component {
                         </Card>
                     </GestureRecognizer>
                     <View  style={styles.container}>
-                        <Button primary large rounded onPress={() => this.onSwipeRight()} iconLeft><Icon name='thumbs-up' /><Text>Buy</Text></Button>
-                        <Button success large rounded><Text> SKIP </Text></Button>
                         <Button danger large rounded onPress={() => this.onSwipeLeft()} iconLeft><Icon name='thumbs-down' /><Text>Nah</Text></Button>
+                        <Button success large rounded onPress={() => this.skipPost()}><Text> SKIP </Text></Button>
+                        <Button primary large rounded onPress={() => this.onSwipeRight()} iconLeft><Icon name='thumbs-up' /><Text>Buy</Text></Button>
                     </View>
                     </Content>
                 </Container>
@@ -197,5 +188,6 @@ const mapStateToProps = (state, ownProps) => {
 export const ItemDisplay = connect(mapStateToProps, {
 	submit_new_vote_buy,
 	submit_new_vote_nah,
-	toggle_full_text
+    toggle_full_text,
+    skip_post
 })(ItemDisplayComponent);
