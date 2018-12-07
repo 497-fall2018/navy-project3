@@ -227,7 +227,7 @@ export const load_posts = () => {
         dispatch({
             type: LOAD_POSTS,
         });
-        axios.get(`http://10.105.236.104:3001/api/post/`)
+        axios.get(`http://navy.mmoderwell.com/api/post/`)
           .then((response) => load_posts_success(dispatch, response))
           .catch((error) => load_posts_failure(dispatch, error))
     }
@@ -252,7 +252,7 @@ export const submit_new_comment = (cmt, curr_post_id) => {
         dispatch({
                 type: SUBMIT_NEW_COMMENT,
         });
-        axios.post(`http://10.105.236.104:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+        axios.post(`http://navy.mmoderwell.com/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
             "text": cmt
         })
           .then((response) => submit_new_comment_success(dispatch, response))
@@ -277,7 +277,7 @@ export const submit_new_vote_buy = (buy_vote, curr_post_id) => {
         dispatch({
                 type: SUBMIT_NEW_VOTE_BUY,
         });
-        axios.post(`http://10.105.236.104:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+        axios.post(`http://navy.mmoderwell.com/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
             "buy": buy_vote
         })
           .then((response) => submit_new_vote_buy_success(dispatch, response))
@@ -301,7 +301,7 @@ export const submit_new_vote_nah = (nah_vote, curr_post_id) => {
         dispatch({
                 type: SUBMIT_NEW_VOTE_NAH,
         });
-        axios.post(`http://10.105.236.104:3001/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
+        axios.post(`http://navy.mmoderwell.com/api/post/${curr_post_id}`, { //https://stackoverflow.com/questions/42189301/axios-in-react-native-not-calling-server-in-localhost
             "nah": nah_vote
         })
           .then((response) => submit_new_vote_nah_success(dispatch, response))

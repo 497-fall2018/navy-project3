@@ -124,7 +124,7 @@ class ItemDisplayComponent extends Component {
                 imagebuffer=this.props.posts[this.props.post_index]['image']['data']['data'];
                 imagetype='data:'+this.props.posts[this.props.post_index]['image']['contentType'];
             }
-            console.log("postslength: " +this.props.posts.length);
+            console.log("postsIndex: " +this.props.post_index);
             
             return(
                 <Container>
