@@ -28,11 +28,11 @@ export default class App extends React.Component {
 		} else {
 			return (
 				<View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-			  <Provider store={store}>
-				  <Root />
-			  </Provider>
-        </View>
+          			{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+			  		<Provider store={store}>
+				  		<Root />
+			  		</Provider>
+        		</View>
 			);
 		}
 	}

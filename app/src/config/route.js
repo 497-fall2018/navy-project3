@@ -2,8 +2,10 @@ import React from 'react';
 import { Dimensions, Image, Platform } from 'react-native';
 import { TabNavigator, StackNavigator, TabBarBottom, NavigationActions } from 'react-navigation';
 import styles from './styles';
-import { HomeScreen, CreateScreen, SettingsScreen } from '../screens';
+import { HomeScreen, CreateScreen, ListScreen, SettingsScreen } from '../screens';
 import TabBarIcon from '../components/TabBarIcon';
+
+import { DrawerNavigator } from 'react-navigation';
 
 const {
     tabBarIconStyle,
@@ -27,26 +29,39 @@ const MainTabRouteConfig = {
             // Note: By default the icon is only shown on iOS. Search the showIcon option below.
             tabBarIcon: ({ focused }) => (
                 <TabBarIcon
-            focused={focused}
-            name={
-            Platform.OS === 'ios'
-              ? `ios-home${focused ? '' : '-outline'}`
-              : 'md-home'
-            }
-            />
+                    focused={focused}
+                    name={
+                        Platform.OS === 'ios'
+                        ? `ios-home${focused ? '' : '-outline'}`
+                        : 'md-home'
+                    }
+                />
             ),
         }
     },
     CreateScreen: {
         screen: CreateScreen,
         navigationOptions: {
-            tabBarLabel: 'New Post',
+            tabBarLabel: 'Create',
             // Note: By default the icon is only shown on iOS. Search the showIcon option below.
             tabBarIcon: ({ focused }) => (
                 <TabBarIcon
-          focused={focused}
-          name={Platform.OS === 'ios' ? 'ios-add' : 'md-add'}
-        />
+                    focused={focused}
+                    name={Platform.OS === 'ios' ? 'ios-add' : 'md-add'}
+                />
+            ),
+        }
+    },
+    ListScreen: {
+        screen: ListScreen,
+        navigationOptions: {
+            tabBarLabel: 'List Items',
+            // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+            tabBarIcon: ({ focused }) => (
+                <TabBarIcon
+                    focused={focused}
+                    name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'}
+                />
             ),
         }
     },
@@ -77,7 +92,8 @@ const AppRouteConfigs = {
 
 const AppNavigator = StackNavigator(
     AppRouteConfigs, {
-        headerMode: 'screen'
+        headerMode: 'screen',
+        headerTitle: 'BuyOrNah'
     }
 );
 

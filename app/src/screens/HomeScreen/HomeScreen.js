@@ -91,8 +91,7 @@ class HomeScreenComponent extends Component {
             return <Expo.AppLoading />;
         }
         return (
-            <Container
-            >
+            <Container>
                 <View style={{flex: 1}}>
                     <ItemDisplay/>
                     <Text>{"   post id: " + this.props.posts[0]["_id"]}</Text>
@@ -105,13 +104,6 @@ class HomeScreenComponent extends Component {
                             <Text style={swipeUpCommentText}> {this.props.showComments == true ? "swipe down to hide comments":"swipe up to see comments"} </Text>
                         </View>
                     </GestureRecognizer>
-    {/*                <View style={tabBarInfoContainer}>
-                        <Text style={tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-                        <View style={[codeHighlightContainer, navigationFilename]}>
-                            <MonoText style={codeHighlightText}></MonoText>
-                        </View>
-                    </View>*/}
                 </View>
 
                 {this.props.showComments &&
