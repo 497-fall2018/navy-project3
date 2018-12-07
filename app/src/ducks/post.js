@@ -9,6 +9,9 @@ export const LOADED_FONTS = 'buyornah/post/LOADED_FONTS';
 export const HANDLE_COMMENT_CHANGE = 'buyornah/post/HANDLE_COMMENT_CHANGE';
 export const HANDLE_SWIPE_DOWN = 'buyornah/post/HANDLE_SWIPE_DOWN';
 export const HANDLE_SWIPE_UP = 'buyornah/post/HANDLE_SWIPE_UP';
+export const HANDLE_SWIPE_LEFT = 'buyornah/post/HANDLE_SWIPE_LEFT';
+export const HANDLE_SWIPE_RIGHT = 'buyornah/post/HANDLE_SWIPE_RIGHT';
+export const TOGGLE_FULL_TEXT = 'buyornah/post/TOGGLE_FULL_TEXT';
 export const SUBMIT_NEW_COMMENT = 'buyornah/post/SUBMIT_NEW_COMMENT';
 export const SUBMIT_NEW_COMMENT_SUCCESS = 'buyornah/post/SUBMIT_NEW_COMMENT_SUCCESS';
 export const SUBMIT_NEW_COMMENT_FAILURE = 'buyornah/post/SUBMIT_NEW_COMMENT_FAILURE';
@@ -40,7 +43,8 @@ const INITIAL_STATE = {
             "text": "I think your dad will love it :)"
         }],
     comment: "",
-    error_message: ""
+    error_message: "",
+    showFullText: false
 };
 
 
@@ -103,6 +107,19 @@ export default function reducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 error_message: "Something went wrong while submitting a new comment.",
+            }
+        case HANDLE_SWIPE_RIGHT:
+            return {
+                ...state
+            }
+        case HANDLE_SWIPE_LEFT:
+            return {
+                ...state
+            }
+        case TOGGLE_FULL_TEXT:
+            return {
+                ...state,
+                showFullText: !state.showFullText
             }
         default:
             return state;
@@ -195,4 +212,26 @@ export const submit_new_comment_failure = (dispatch, error) => {
     dispatch({
         type: SUBMIT_NEW_COMMENT_FAILURE,
     });
+}
+
+export const handle_swipe_left = () => {
+    return (dispatch) => {
+        dispatch({
+            type: HANDLE_SWIPE_LEFT
+        })
+    }
+}
+export const handle_swipe_right = () => {
+    return (dispatch) => {
+        dispatch({
+            type: HANDLE_SWIPE_RIGHT
+        })
+    }
+}
+export const toggle_full_text = () => {
+    return (dispatch) => {
+        dispatch({
+            type: TOGGLE_FULL_TEXT
+        })
+    }
 }
